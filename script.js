@@ -92,8 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
           hideLoadingDots();
           console.error("Error:", error);
         });
-    }   
-    
+    }       
   
     function displayMessage(data, sender) {
       const chatbox = document.getElementById("chatbox");
@@ -140,62 +139,25 @@ document.addEventListener("DOMContentLoaded", () => {
       // Append the span element to the message container
       messageElem.appendChild(messageSpan);
     
-      // Append the message element to the chatbox
-      chatbox.appendChild(messageElem);
-    
-      // Check if there is no error and dashboard data is provided
-      if (!containsError && data.dashboardData && data.dashboardData.dashboardID) {
-        const idPara = document.createElement("p");
-        idPara.classList.add("dashboard-id");
-    
-        const idLink = document.createElement("a");
-        idLink.href = "#";
-        idLink.textContent = ` ${data.dashboardData.dashboardName}`;
-        idLink.onclick = function () {
-          embedSupersetDashboard(data.dashboardData.dashboardID);
-          const dashboard = document.getElementById("dashboard");
-          dashboard.style.display = "block";
-        };
-    
-        idPara.appendChild(idLink);
-        messageElem.appendChild(idPara);
-    
-        // Display interactive suggestions if they exist
-        if (data.dashboardData.suggestions) {
-          const suggestions = data.dashboardData.suggestions;
-    
-          // Create a container for suggestions
-          const suggestionContainer = document.createElement("div");
-          suggestionContainer.classList.add("suggestions");
-    
-          // Add each suggestion as a clickable button
-          suggestions.forEach((suggestion) => {
-            const suggestionElem = document.createElement("button");
-            suggestionElem.classList.add("suggestion");
-            suggestionElem.textContent = suggestion;
-    
-            // Add click event to populate input, send the message, and remove suggestions
-            suggestionElem.addEventListener("click", () => {
-              document.getElementById("user-input").value = suggestion;
-              sendMessage();
-              if (chatbox.contains(suggestionContainer)) {
-          chatbox.removeChild(suggestionContainer); // Remove the suggestion container after click
-          }
-            });
-    
-            suggestionContainer.appendChild(suggestionElem);
-          });
-    
-          // Append the suggestion container to the chatbox after the message element
-          chatbox.appendChild(suggestionContainer);
-        }
+      // Check if image_url exists and create an image element
+      if (data.image_url) {
+        const imageElem = document.createElement("img");
+        imageElem.src = data.image_url;
+        imageElem.alt = "Image";
+        imageElem.style.maxWidth = "100%"; // Set a maximum width to ensure it fits within the chatbox
+        imageElem.style.marginTop = "10px"; // Add some spacing between the text and image
+        
+        // Append the image element to the message container
+        messageElem.appendChild(imageElem);
       }
     
+      // Append the message element to the chatbox
+      chatbox.appendChild(messageElem);  
+      
       // Scroll to the bottom of the chatbox
       chatbox.scrollTop = chatbox.scrollHeight;
     }
-    
-    
+       
     function showLoadingDots() {
       const chatbox = document.getElementById("chatbox");
       const loadingDots = document.createElement("div");
